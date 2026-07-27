@@ -40,7 +40,7 @@ export function Hero() {
         scrub: 1,
       },
       y: 100,
-      opacity: 0.5,
+      opacity: 0,
     });
   }, []);
 
@@ -51,15 +51,15 @@ export function Hero() {
     >
       <DroneCanvas />
 
-      {/* Dark gradient overlay for readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-chassis/30 via-chassis/60 to-chassis z-0 pointer-events-none" />
+      {/* Dark gradient overlay for readability, fading out towards top for 3D visibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-chassis/40 to-chassis z-0 pointer-events-none" />
 
-      <div className="absolute top-32 left-6 md:left-12 lg:left-24 font-mono text-xs md:text-sm tracking-widest text-metal uppercase flex items-center gap-4 z-10">
+      <div className="absolute top-32 left-6 md:left-12 lg:left-24 font-mono text-xs md:text-sm tracking-widest text-metal uppercase flex items-center gap-4 z-10 pointer-events-none">
         <span className="w-2 h-2 bg-amber rounded-full animate-pulse" />
         AeroNetra Systems // V 2.4.0
       </div>
 
-      <div className="max-w-7xl relative z-10 w-full mt-20">
+      <div className="max-w-7xl relative z-10 w-full mt-20 pointer-events-none">
         <h1
           ref={textRef}
           className="font-display text-5xl md:text-7xl lg:text-9xl font-bold tracking-tighter leading-[0.85] uppercase mb-12 flex flex-wrap gap-x-6 gap-y-4"
@@ -74,7 +74,7 @@ export function Hero() {
           ))}
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-end pointer-events-auto">
           <div className="md:col-span-6 md:col-start-7 lg:col-span-5 lg:col-start-8">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -91,7 +91,7 @@ export function Hero() {
               transition={{ delay: 1.2, duration: 0.8 }}
               className="flex items-center gap-6"
             >
-              <button className="group relative flex items-center justify-center gap-2 bg-graphite text-chassis px-8 py-4 font-mono text-sm uppercase tracking-wider overflow-hidden rounded-sm hover:bg-white transition-colors">
+              <button className="group relative flex items-center justify-center gap-2 bg-graphite text-chassis px-8 py-4 font-mono text-sm uppercase tracking-wider overflow-hidden rounded-sm hover:bg-white transition-colors cursor-pointer">
                 <span className="relative z-10 flex items-center gap-2 font-bold">
                   Initialize <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
