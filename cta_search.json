@@ -1,0 +1,83 @@
+[
+  {
+    "type": "component",
+    "id": 19355,
+    "name": "CTA Section",
+    "description": "A call-to-action marketing section with a headline, badge, action buttons, and resource cards for documentation and video tutorials.",
+    "previewUrl": "https://cdn.21st.dev/shadcnstore/cta-section-3/default/preview.1783728595090.png",
+    "videoUrl": "https://cdn.21st.dev/shadcnstore/cta-section-3/default/video.1783728595090.mp4",
+    "author": "shadcnstore",
+    "authorImage": null,
+    "installCommand": "npx shadcn@latest add \"https://21st.dev/r/shadcnstore/cta-section-3?api_key=$API_KEY_21ST\"",
+    "url": "https://21st.dev/@shadcnstore/components/cta-section-3"
+  },
+  {
+    "type": "component",
+    "id": 1960,
+    "name": "cta section with gallery",
+    "description": "call to action section with stagger animation and image gallery",
+    "previewUrl": "https://cdn.21st.dev/user_2sdAd21yCZlZRkVtZyf4K8ogkBh/cta-section-with-gallery/cta-section-with-gallery/preview.png?v=1",
+    "videoUrl": "https://cdn.21st.dev/user_2sdAd21yCZlZRkVtZyf4K8ogkBh/cta-section-with-gallery/cta-section-with-gallery/video.mp4?v=1",
+    "author": "youcefbnm",
+    "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_2sdAd21yCZlZRkVtZyf4K8ogkBh/avatar.png",
+    "installCommand": "npx shadcn@latest add \"https://21st.dev/r/youcefbnm/cta-section-with-gallery?api_key=$API_KEY_21ST\"",
+    "url": "https://21st.dev/@youcefbnm/components/cta-section-with-gallery"
+  },
+  {
+    "type": "component",
+    "id": 18475,
+    "name": "Call to Action",
+    "description": "A centered call-to-action section with a balanced title, description, and optional button.",
+    "previewUrl": "https://cdn.21st.dev/felipemenezes098/cta-01/default/preview.1783582022910.png",
+    "videoUrl": null,
+    "author": "felipemenezes098",
+    "authorImage": "https://pbs.twimg.com/profile_images/2030318499411660800/DD2z5RMo_400x400.jpg",
+    "installCommand": "npx shadcn@latest add \"https://21st.dev/r/felipemenezes098/cta-01?api_key=$API_KEY_21ST\"",
+    "url": "https://21st.dev/@felipemenezes098/components/cta-01"
+  },
+  {
+    "type": "component",
+    "id": 8764,
+    "name": "Call to Action (CTA)",
+    "description": "Call to Action Card\nA full-width, visually engaging card that combines a background image with a title, description, and an email signup form. It's designed to capture user attention and drive conversions.",
+    "previewUrl": "https://cdn.21st.dev/kavikatiyar/call-to-action-cta/default/preview.1760261921524.png",
+    "videoUrl": "https://cdn.21st.dev/kavikatiyar/call-to-action-cta/default/video.1760261921524.mp4",
+    "author": "kavikatiyar",
+    "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_32hbh6QoSVv3IJTJfaQWBLHRl6N/avatar.jpeg",
+    "installCommand": "npx shadcn@latest add \"https://21st.dev/r/kavikatiyar/call-to-action-cta?api_key=$API_KEY_21ST\"",
+    "url": "https://21st.dev/@kavikatiyar/components/call-to-action-cta"
+  },
+  {
+    "type": "template",
+    "id": 725,
+    "name": "Folio — Open Source Data Intelligence Landing Template",
+    "description": "Production-grade Next.js 15 landing template for open-source data intelligence, BI, and AI-charting products. Hero with embedded dashboard preview, Bento feature grid, animated Feature Tabs, How-it-Works walkthrough, Testimonials, Pricing, FAQ & CTA — plus Pricing, Contact, Privacy, Terms & 404 pages. React 19, Tailwind 4, shadcn/ui, light/dark, SEO-ready. Launch a credible OSS data-tool site in a day.",
+    "previewUrl": "https://cdn.21st.dev/user_2y5Wd5l713ZIFYjX19aZXSyXd6b/templates/folio-open-source-data-intelligence-landing-template/preview-1782463876385.png",
+    "author": "ruixen.ui",
+    "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_2y5Wd5l713ZIFYjX19aZXSyXd6b/avatar.svg+xml",
+    "url": "https://21st.dev/community/templates/folio-open-source-data-intelligence-landing-template",
+    "price": 39
+  },
+  {
+    "type": "template",
+    "id": 724,
+    "name": "Vertex — AI Workflow Automation Landing Template",
+    "description": "Production-grade Next.js 15 landing page for AI workflow automation products. 10+ pre-built sections (hero with rotating CRM cards, features, pricing comparison, testimonials, FAQ, CTA) plus Pricing, Contact, Privacy, Terms & 404 pages. React 19, Tailwind 4, shadcn/ui, light/dark, SEO-ready. Ship a credible AI-product site in a day.",
+    "previewUrl": "https://cdn.21st.dev/user_2y5Wd5l713ZIFYjX19aZXSyXd6b/templates/vertex-ai-workflow-automation-landing-template/preview-1782463534802.png",
+    "author": "ruixen.ui",
+    "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_2y5Wd5l713ZIFYjX19aZXSyXd6b/avatar.svg+xml",
+    "url": "https://21st.dev/community/templates/vertex-ai-workflow-automation-landing-template",
+    "price": 39
+  },
+  {
+    "type": "template",
+    "id": 105,
+    "name": "Sales Landing Page for Maximum Conversions 🚀",
+    "description": "Sales Landing Page for Maximum Conversions 🚀\nLooking to boost your sales and capture more leads? This high-converting Sales Landing Page is designed to help you drive results quickly and efficiently.\n\nKey Features:\n✅ Clean, modern, and mobile-responsive design\n✅ Fast loading speed for better user experience\n✅ Clear call-to-action (CTA) sections\n✅ Seamless integration with forms, CRMs, or email tools\n✅ Customizable to fit your brand and product\n✅ SEO-friendly structure to increase visibility\n\nPerfect For:\nProduct Launches\n\nService Promotions\n\nLead Generation Campaigns\n\nSpecial Offers or Limited-Time Deals\n\nWhether you're a startup, entrepreneur, or agency, this landing page is the perfect tool to convert visitors into customers.\n\n",
+    "previewUrl": "https://cdn.21st.dev/user_2rTidf8ywiOqdoBn7DYG6caFaNJ/sales-landing-page-for-maximum-conversions/preview.png",
+    "author": "sh20raj",
+    "authorImage": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ2l0aHViL2ltZ18yclRpZGZXTHdmTGpGSjJ1ZlN2Y1lzNXhHWjkifQ",
+    "url": "https://21st.dev/community/templates/sales-landing-page-for-maximum-conversions",
+    "price": 30
+  }
+]

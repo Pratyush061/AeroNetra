@@ -10,6 +10,7 @@ import { PipelineConnector } from '@/components/ui/PipelineConnector';
 import { IndustrialPanel } from '@/components/ui/IndustrialPanel';
 import { RepositoryPanel } from '@/components/RepositoryPanel';
 import { StatusLED } from '@/components/ui/StatusLED';
+import { CallToAction } from '@/components/ui/CallToAction';
 
 export default function Home() {
   return (
@@ -77,6 +78,9 @@ export default function Home() {
               </RecessedScreen>
             </div>
           </section>
+
+          {/* CALL TO ACTION */}
+          <CallToAction />
 
           {/* CAPABILITY MODULES SECTION */}
           <section id="capabilities">

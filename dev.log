@@ -1,0 +1,15 @@
+
+> temp-app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.11 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+- Environments: .env.local
+✓ Ready in 534ms
+
+○ Compiling / ...
+ GET / 200 in 7.9s (next.js: 6.1s, application-code: 1779ms)
+[browser] Image with src "/logo.png" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+ GET /get-started 200 in 683ms (next.js: 635ms, application-code: 47ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
