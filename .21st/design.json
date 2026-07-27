@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "project": {
+    "name": "temp-app",
+    "productType": null,
+    "stack": [
+      "nextjs",
+      "react",
+      "tailwind-v4"
+    ]
+  },
+  "sources": {
+    "tokens": [
+      "src/app/globals.css"
+    ],
+    "components": [
+      "src/components/ui"
+    ],
+    "assets": [],
+    "instructions": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ]
+  },
+  "design": {
+    "colorMode": "light",
+    "colors": {
+      "--color-chassis": {
+        "value": "#E9E5DC",
+        "source": "src/app/globals.css"
+      },
+      "--color-panel": {
+        "value": "#F4F1E9",
+        "source": "src/app/globals.css"
+      },
+      "--color-recessed": {
+        "value": "#D7D2C8",
+        "source": "src/app/globals.css"
+      },
+      "--color-graphite": {
+        "value": "#191715",
+        "source": "src/app/globals.css"
+      },
+      "--color-carbon": {
+        "value": "#351407",
+        "source": "src/app/globals.css"
+      },
+      "--color-umber": {
+        "value": "#542008",
+        "source": "src/app/globals.css"
+      },
+      "--color-amber": {
+        "value": "#E88900",
+        "source": "src/app/globals.css"
+      },
+      "--color-signal": {
+        "value": "#F5A000",
+        "source": "src/app/globals.css"
+      },
+      "--color-metal": {
+        "value": "#746E65",
+        "source": "src/app/globals.css"
+      },
+      "--color-highlight": {
+        "value": "#FFFFFF",
+        "source": "src/app/globals.css"
+      },
+      "--color-shadow": {
+        "value": "#B8B1A5",
+        "source": "src/app/globals.css"
+      }
+    },
+    "typography": {
+      "--font-sans": {
+        "value": "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+        "source": "src/app/globals.css"
+      },
+      "--font-mono": {
+        "value": "var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+        "source": "src/app/globals.css"
+      },
+      "--font-display": {
+        "value": "var(--font-space), ui-sans-serif, system-ui, sans-serif",
+        "source": "src/app/globals.css"
+      }
+    },
+    "spacing": {},
+    "radius": {},
+    "shadows": {
+      "--shadow-recessed": {
+        "value": "inset 0 2px 4px 0 rgba(25, 23, 21, 0.1), inset 0 4px 8px 0 rgba(25, 23, 21, 0.05)",
+        "source": "src/app/globals.css"
+      },
+      "--shadow-raised": {
+        "value": "0 4px 6px -1px rgba(184, 177, 165, 0.4), 0 2px 4px -2px rgba(184, 177, 165, 0.3), inset 1px 1px 0 0 rgba(255, 255, 255, 0.6)",
+        "source": "src/app/globals.css"
+      },
+      "--shadow-control": {
+        "value": "0 2px 4px 0 rgba(184, 177, 165, 0.6), inset 1px 1px 0 0 rgba(255, 255, 255, 0.8), inset -1px -1px 0 0 rgba(184, 177, 165, 0.5)",
+        "source": "src/app/globals.css"
+      },
+      "--shadow-ambient": {
+        "value": "0 20px 25px -5px rgba(184, 177, 165, 0.3), 0 8px 10px -6px rgba(184, 177, 165, 0.2)",
+        "source": "src/app/globals.css"
+      }
+    },
+    "motion": {},
+    "density": "unknown"
+  },
+  "components": {
+    "installed": [
+      "IndustrialPanel",
+      "PhysicalButton",
+      "PipelineConnector",
+      "RecessedScreen",
+      "SectionHeading",
+      "StatusLED",
+      "TechnicalLabel",
+      "TelemetryRow"
+    ],
+    "preferredPrimitives": [],
+    "patterns": []
+  },
+  "constraints": {
+    "must": [],
+    "avoid": []
+  },
+  "decisions": [],
+  "evidence": [
+    {
+      "fact": "components.installed",
+      "source": "src/components/ui"
+    },
+    {
+      "fact": "design.colorMode:light",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "design.tokens",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "AGENTS.md"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "CLAUDE.md"
+    },
+    {
+      "fact": "project.stack:nextjs",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:react",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:tailwind-v4",
+      "source": "package.json"
+    }
+  ],
+  "generatedAt": "2026-07-27T06:36:36.051Z"
+}
