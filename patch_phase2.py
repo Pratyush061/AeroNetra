@@ -1,10 +1,11 @@
-"use client";
+import re
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Float } from "@react-three/drei";
-import { useRef, useMemo, useEffect } from "react";
-import * as THREE from "three";
+with open("src/components/3d/DroneCanvas.tsx", "r") as f:
+    content = f.read()
 
+# 1. Procedural Texture Generation
+procedural_texture_code = """
+import { useTexture } from "@react-three/drei";
 
 function createEquirectangularTexture() {
   const canvas = document.createElement('canvas');
@@ -54,33 +55,26 @@ function createEquirectangularTexture() {
   texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
 }
+"""
 
+content = content.replace('import * as THREE from "three";', 'import * as THREE from "three";\n' + procedural_texture_code)
+content = content.replace('import { Float } from "@react-three/drei";', 'import { Float } from "@react-three/drei";') # Already imported useTexture above
 
-
-// Simple seeded PRNG to avoid React purity warnings with Math.random()
-function pseudoRandom(seed: number) {
-  const x = Math.sin(seed++) * 10000;
-  return x - Math.floor(x);
-}
-
-
-// Shader material to make particles sharp and perfectly round
-// A geometric representation of a drone/point cloud for the background
-function ParticleDrone() {
-
-
-  const sphereTexture = useMemo(() => createEquirectangularTexture(), []);
-
-  const particleShaderMaterial = useMemo(() => new THREE.ShaderMaterial({
-
+# Add uProgress and uTexture to shader uniforms
+shader_material_uniforms = """
     uniforms: {
       uTime: { value: 0 },
       uColor: { value: new THREE.Color("#ffffff") },
       uMouse: { value: new THREE.Vector3(0, 0, 0) },
       uHoverState: { value: 0.0 }, // 0 to 1 smooth transition
       uProgress: { value: 0.0 }, // 0 = wrapped, 1 = unwrapped
-      uTexture: { value: sphereTexture }, // Equirectangular texture
+      uTexture: { value: null }, // Equirectangular texture
     },
+"""
+content = re.sub(r'uniforms: \{[\s\S]*?\},', shader_material_uniforms.strip(), content)
+
+# 2. Add attributes and shader logic for unwrap
+shader_vertex = """
     vertexShader: `
       attribute float size;
       attribute vec2 uv_coord;
@@ -166,6 +160,10 @@ function ParticleDrone() {
         vOpacity = 1.0 - smoothstep(0.5, 1.0, uProgress);
       }
     `,
+"""
+content = re.sub(r'vertexShader: `[\s\S]*?`,', shader_vertex.strip() + ',', content)
+
+shader_fragment = """
     fragmentShader: `
       uniform vec3 uColor;
       uniform sampler2D uTexture;
@@ -198,93 +196,20 @@ function ParticleDrone() {
         gl_FragColor = vec4(finalColor, finalAlpha);
       }
     `,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  }), [sphereTexture]);
+"""
+content = re.sub(r'fragmentShader: `[\s\S]*?`,', shader_fragment.strip() + ',', content)
+
+# 3. Create Fibonacci sphere geometry instead of drone
+geometry_code = """
+  // Create equirectangular texture
+  const sphereTexture = useMemo(() => createEquirectangularTexture(), []);
 
   useEffect(() => {
-    return () => {
-      particleShaderMaterial.dispose();
-    };
-  }, [particleShaderMaterial]);
+    if (particleShaderMaterial) {
+      particleShaderMaterial.uniforms.uTexture.value = sphereTexture;
+    }
+  }, [sphereTexture, particleShaderMaterial]);
 
-  const pointsRef = useRef<THREE.Points>(null);
-  const targetHoverState = useRef(0);
-  const currentHoverState = useRef(0);
-
-  const isMouseActiveRef = useRef(false);
-  const mouseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const prefersReducedMotionRef = useRef(false);
-
-  useEffect(() => {
-    const handlePointerMove = () => {
-      isMouseActiveRef.current = true;
-      if (mouseTimeoutRef.current) clearTimeout(mouseTimeoutRef.current);
-      mouseTimeoutRef.current = setTimeout(() => {
-        isMouseActiveRef.current = false;
-      }, 2000);
-    };
-
-    window.addEventListener('pointermove', handlePointerMove);
-
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    prefersReducedMotionRef.current = mediaQuery.matches;
-    const handleMotionChange = (e: MediaQueryListEvent) => {
-      prefersReducedMotionRef.current = e.matches;
-    };
-    mediaQuery.addEventListener('change', handleMotionChange);
-
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      mediaQuery.removeEventListener('change', handleMotionChange);
-      if (mouseTimeoutRef.current) clearTimeout(mouseTimeoutRef.current);
-    };
-  }, []);
-
-
-  const progressRef = useRef(0);
-  useEffect(() => {
-    // Find the hero section, it should be the parent wrapper.
-    // Since this canvas is rendered inside the Hero section which takes min-h-screen,
-    // we can use the closest section element or track scroll on document.
-    let animationFrameId: number;
-    let heroEl = document.querySelector('section');
-
-    const handleScroll = () => {
-      if (!heroEl) {
-        heroEl = document.querySelector('section');
-        if (!heroEl) return;
-      }
-
-      const heroRect = heroEl.getBoundingClientRect();
-      // Progress from 0 (top of hero at top of viewport) to 1 (hero scrolled completely out of view)
-      // heroRect.top is 0 when hero is at top of screen.
-      // heroRect.top is -heroRect.height when hero is completely scrolled up past the top.
-      const progress = Math.max(0, Math.min(1, -heroRect.top / heroRect.height));
-      progressRef.current = progress;
-    };
-
-    const throttledScroll = () => {
-      animationFrameId = requestAnimationFrame(handleScroll);
-    };
-
-    window.addEventListener('scroll', throttledScroll, { passive: true });
-    // Run once to initialize
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', throttledScroll);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
-  const mouse3D = useRef(new THREE.Vector3(0, 0, 0));
-  const raycasterRef = useRef(new THREE.Raycaster());
-  const planeRef = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0));
-  const intersectPosRef = useRef(new THREE.Vector3());
-
-  // Create a stylized drone shape out of points, structured pattern
   // Create a Fibonacci sphere
   const [positions, sizes, uvs, pointIndexOffsets] = useMemo(() => {
     const particleCount = 3000;
@@ -321,55 +246,11 @@ function ParticleDrone() {
 
     return [pos, size, uv, pointIndexOffset];
   }, []); // Run once on mount
+"""
+content = re.sub(r'const \[positions, sizes\] = useMemo\(\(\) => \{[\s\S]*?return \[pos, size\];\n  \}, \[\]\); \/\/ Run once on mount', geometry_code.strip(), content)
 
-  useFrame((state, delta) => {
-    if (pointsRef.current) {
-      // Base rotation
-      if (!prefersReducedMotionRef.current) {
-        pointsRef.current.rotation.y += delta * 0.2;
-        pointsRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
-        pointsRef.current.rotation.x = Math.cos(state.clock.elapsedTime * 0.3) * 0.1 + 0.2;
-      } else {
-        pointsRef.current.rotation.y = 0;
-        pointsRef.current.rotation.z = 0;
-        pointsRef.current.rotation.x = 0.2;
-      }
-
-      // Mouse interaction
-      // Project mouse coordinates (-1 to +1) to 3D space on the drone's plane
-      raycasterRef.current.setFromCamera(state.pointer, state.camera);
-      const pos = intersectPosRef.current;
-      raycasterRef.current.ray.intersectPlane(planeRef.current, pos);
-
-      if (pos) {
-        // Transform world mouse pos into local space of the points object
-        pointsRef.current.worldToLocal(pos);
-
-        // Smoothly track mouse
-        mouse3D.current.lerp(pos, 0.1);
-      }
-
-      // Smoothly transition hover state (active if mouse is moved)
-      targetHoverState.current = isMouseActiveRef.current && !prefersReducedMotionRef.current ? 1.0 : 0.0;
-
-      // Faster lerp in, slower lerp out for premium feel
-      const lerpSpeed = targetHoverState.current > currentHoverState.current ? 0.15 : 0.05;
-      currentHoverState.current += (targetHoverState.current - currentHoverState.current) * lerpSpeed;
-
-// Update shader uniform
-      const material = pointsRef.current.material as THREE.ShaderMaterial;
-      if (material.uniforms) {
-        material.uniforms.uTime.value = state.clock.elapsedTime;
-        material.uniforms.uMouse.value.copy(mouse3D.current);
-        material.uniforms.uHoverState.value = prefersReducedMotionRef.current ? 0.0 : currentHoverState.current;
-        material.uniforms.uProgress.value = prefersReducedMotionRef.current ? 0.0 : progressRef.current;
-      }
-    }
-  });
-
-  return (
-    <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1}>
-      <points ref={pointsRef} material={particleShaderMaterial}>
+# 4. Attach new attributes in JSX
+jsx_attributes = """
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
@@ -400,22 +281,71 @@ function ParticleDrone() {
             itemSize={1}
           />
         </bufferGeometry>
-      </points>
-    </Float>
-  );
-}
+"""
+content = re.sub(r'<bufferGeometry>[\s\S]*?<\/bufferGeometry>', jsx_attributes.strip(), content)
 
-export function DroneCanvas() {
-  return (
-    <div className="absolute inset-0 z-0 pointer-events-auto">
-      <Canvas
-        camera={{ position: [0, 5, 12], fov: 45 }}
-        gl={{ antialias: true, alpha: true }}
-        dpr={[1, 2]} // Support high-DPI (Retina) displays
-      >
-        <ambientLight intensity={0.5} />
-        <ParticleDrone />
-              </Canvas>
-    </div>
-  );
-}
+# 5. Add scroll binding for uProgress
+scroll_code = """
+  const progressRef = useRef(0);
+  useEffect(() => {
+    // Find the hero section, it should be the parent wrapper.
+    // Since this canvas is rendered inside the Hero section which takes min-h-screen,
+    // we can use the closest section element or track scroll on document.
+    let animationFrameId: number;
+    let heroEl = document.querySelector('section');
+
+    const handleScroll = () => {
+      if (!heroEl) {
+        heroEl = document.querySelector('section');
+        if (!heroEl) return;
+      }
+
+      const heroRect = heroEl.getBoundingClientRect();
+      // Progress from 0 (top of hero at top of viewport) to 1 (hero scrolled completely out of view)
+      // heroRect.top is 0 when hero is at top of screen.
+      // heroRect.top is -heroRect.height when hero is completely scrolled up past the top.
+      const progress = Math.max(0, Math.min(1, -heroRect.top / heroRect.height));
+      progressRef.current = progress;
+    };
+
+    const throttledScroll = () => {
+      animationFrameId = requestAnimationFrame(handleScroll);
+    };
+
+    window.addEventListener('scroll', throttledScroll, { passive: true });
+    // Run once to initialize
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', throttledScroll);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+"""
+
+content = content.replace("const mouse3D = useRef(new THREE.Vector3(0, 0, 0));", scroll_code + "\n  const mouse3D = useRef(new THREE.Vector3(0, 0, 0));")
+
+useframe_update = """
+      // Update shader uniform
+      const material = pointsRef.current.material as THREE.ShaderMaterial;
+      if (material.uniforms) {
+        material.uniforms.uTime.value = state.clock.elapsedTime;
+        material.uniforms.uMouse.value.copy(mouse3D.current);
+        material.uniforms.uHoverState.value = prefersReducedMotionRef.current ? 0.0 : currentHoverState.current;
+        material.uniforms.uProgress.value = prefersReducedMotionRef.current ? 0.0 : progressRef.current;
+      }
+"""
+content = re.sub(r'      // Update shader uniform[\s\S]*?uHoverState\.value = prefersReducedMotionRef\.current \? 0\.0 : currentHoverState\.current;\n      \}', useframe_update.strip(), content)
+
+# Clean up CONFIG object since we don't need drone magic numbers anymore
+clean_config = """
+const CONFIG = {
+  particleCount: 3000, // For the new globe
+  effectRadius: 3.0,
+};
+"""
+content = re.sub(r'const CONFIG = \{[\s\S]*?effectRadius: 3\.0,\n\};', clean_config.strip(), content)
+
+
+with open("src/components/3d/DroneCanvas.tsx", "w") as f:
+    f.write(content)
