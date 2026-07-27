@@ -64,7 +64,7 @@ export function Features() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-32 px-6 md:px-12 lg:px-24 bg-graphite text-chassis border-b-2 border-amber grid-pattern-dark relative">
+    <section ref={sectionRef} className="py-32 px-6 md:px-12 lg:px-24 bg-transparent text-chassis backdrop-blur-sm border-b-2 border-amber grid-pattern-dark relative">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-24 gap-8">
           <h2 className="font-display text-4xl md:text-6xl font-bold uppercase tracking-tighter leading-none max-w-2xl">

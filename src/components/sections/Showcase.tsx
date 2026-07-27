@@ -49,21 +49,21 @@ export function Showcase() {
   }, []);
 
   return (
-    <section ref={containerRef} className="py-32 px-6 md:px-12 lg:px-24 bg-chassis border-b-2 border-graphite overflow-hidden">
+    <section ref={containerRef} className="py-32 px-6 md:px-12 lg:px-24 bg-graphite/90 backdrop-blur-md border-b-2 border-graphite overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div ref={textRef} className="order-2 lg:order-1">
           <div className="font-mono text-sm text-amber uppercase tracking-wider mb-6 flex items-center gap-4">
             <span className="w-8 h-[2px] bg-amber" />
             Simulation Environment
           </div>
-          <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter leading-[0.9] mb-8 text-graphite">
+          <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter leading-[0.9] mb-8 text-chassis">
             Train Before <br />
             <span className="text-stroke">You Fly.</span>
           </h2>
-          <p className="font-sans text-lg text-graphite/80 leading-relaxed mb-8 max-w-md">
+          <p className="font-sans text-lg text-chassis/80 leading-relaxed mb-8 max-w-md">
             Our high-fidelity simulation engine allows for rigorous testing of perception algorithms in photorealistic synthetic environments before deploying to physical hardware.
           </p>
-          <ul className="space-y-4 font-mono text-sm text-graphite uppercase border-l-2 border-graphite/20 pl-6">
+          <ul className="space-y-4 font-mono text-sm text-chassis uppercase border-l-2 border-graphite/20 pl-6">
             <li>+ Synthetic Data Generation</li>
             <li>+ Edge-case scenario testing</li>
             <li>+ Hardware-in-the-loop (HITL)</li>

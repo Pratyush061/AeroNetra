@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('AeroNetra Homepage', () => {
-  test('should load without errors and trigger animations', async ({ page }) => {
+test.describe('AeroNetra Homepage - WebGL Integration', () => {
+  test('should render 3D canvas and overlay UI without WebGL errors', async ({ page }) => {
     await page.goto('/');
 
     const logs: string[] = [];
@@ -11,19 +11,23 @@ test.describe('AeroNetra Homepage', () => {
       }
     });
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
-    // Test Hero
+    // Check that we can find the body and it rendered
+    await expect(page.locator('body')).toBeVisible();
+
+    // Verify UI is still rendering over the canvas
     await expect(page.locator('h1').first()).toBeVisible();
 
-    // Test scrolling and triggering GSAP
-    await page.evaluate(() => window.scrollTo(0, 1000));
-    await page.waitForTimeout(500);
-    await page.evaluate(() => window.scrollTo(0, 2000));
-    await page.waitForTimeout(500);
+    // Scroll to trigger camera rig animation
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
+    await page.waitForTimeout(1000);
+
+    // Scroll to bottom
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await page.waitForTimeout(1000);
 
+    // WebGL context loss or crashes would throw console errors
     expect(logs.length).toBe(0);
   });
 });

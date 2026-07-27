@@ -34,7 +34,7 @@ export function OpenSource() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-32 px-6 md:px-12 lg:px-24 bg-graphite text-chassis border-b-2 border-carbon relative">
+    <section ref={sectionRef} className="py-32 px-6 md:px-12 lg:px-24 bg-transparent text-chassis backdrop-blur-md border-b-2 border-carbon relative">
       <div className="absolute top-0 right-0 w-1/2 h-full grid-pattern-dark opacity-10 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16">

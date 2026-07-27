@@ -59,7 +59,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.8 }}
-              className="text-lg md:text-xl text-graphite/80 font-sans leading-relaxed mb-8"
+              className="text-lg md:text-xl text-chassis/80 font-sans leading-relaxed mb-8"
             >
               We build computer-vision, perception and simulation software for UAVs—transforming aerial imagery into structured intelligence for autonomous systems.
             </motion.p>

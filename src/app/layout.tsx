@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} scroll-smooth`}>
-      <body className="min-h-screen antialiased bg-chassis text-graphite selection:bg-amber selection:text-white flex flex-col">
+      <body className="min-h-screen antialiased bg-graphite text-chassis selection:bg-amber selection:text-white flex flex-col font-sans">
         {children}
       </body>
     </html>

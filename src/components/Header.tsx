@@ -23,7 +23,7 @@ export function Header() {
 
   return (
     <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 lg:px-24 py-6 flex items-center justify-between pointer-events-none">
-      <div className="font-display text-xl font-black uppercase tracking-tighter text-graphite pointer-events-auto bg-chassis/80 backdrop-blur-md px-4 py-2 border-2 border-graphite">
+      <div className="font-display text-xl font-black uppercase tracking-tighter text-chassis pointer-events-auto bg-chassis/80 backdrop-blur-md px-4 py-2 border-2 border-graphite">
         AeroNetra.
       </div>
 
@@ -32,7 +32,7 @@ export function Header() {
           <a
             key={item}
             href={`#${item.toLowerCase().replace(' ', '-')}`}
-            className="font-mono text-xs uppercase font-bold text-graphite hover:text-amber transition-colors"
+            className="font-mono text-xs uppercase font-bold text-chassis hover:text-amber transition-colors"
           >
             {item}
           </a>
