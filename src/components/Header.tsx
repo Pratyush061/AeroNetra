@@ -32,7 +32,7 @@ export function Header() {
           <a
             key={item}
             href={`#${item.toLowerCase().replace(' ', '-')}`}
-            className="font-mono text-xs uppercase font-bold text-metal hover:text-white transition-colors"
+            className="font-mono text-xs uppercase font-bold text-metal hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             {item}
           </a>
@@ -40,10 +40,10 @@ export function Header() {
       </nav>
 
       <div className="flex items-center gap-4 pointer-events-auto">
-        <button className="hidden md:flex bg-graphite text-chassis px-6 py-3 font-mono text-xs uppercase font-bold hover:bg-white transition-colors rounded-sm shadow-lg">
+        <button className="hidden md:flex bg-graphite text-chassis px-6 py-3 font-mono text-xs uppercase font-bold hover:bg-white transition-colors rounded-sm shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
           Explore Platform
         </button>
-        <button className="lg:hidden bg-graphite text-chassis p-3 hover:bg-white transition-colors rounded-sm">
+        <button aria-label="Toggle menu" className="lg:hidden bg-graphite text-chassis p-3 hover:bg-white transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
           <Menu className="w-5 h-5" />
         </button>
       </div>
