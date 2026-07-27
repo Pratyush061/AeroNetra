@@ -100,6 +100,11 @@ const particleShaderMaterial = new THREE.ShaderMaterial({
   blending: THREE.AdditiveBlending,
 });
 
+// Pre-allocate Vector3 objects outside component to prevent per-frame garbage collection
+const tempVector = new THREE.Vector3();
+const tempDir = new THREE.Vector3();
+const tempPos = new THREE.Vector3();
+
 // A geometric representation of a drone/point cloud for the background
 function ParticleDrone() {
   const pointsRef = useRef<THREE.Points>(null);
@@ -192,17 +197,17 @@ function ParticleDrone() {
 
       // Mouse interaction
       // Project mouse coordinates (-1 to +1) to 3D space on the drone's plane
-      const vector = new THREE.Vector3(state.pointer.x, state.pointer.y, 0);
-      vector.unproject(state.camera);
-      const dir = vector.sub(state.camera.position).normalize();
-      const distance = -state.camera.position.z / dir.z; // Ray intersect with Z=0 plane
-      const pos = state.camera.position.clone().add(dir.multiplyScalar(distance));
+      tempVector.set(state.pointer.x, state.pointer.y, 0);
+      tempVector.unproject(state.camera);
+      tempDir.copy(tempVector).sub(state.camera.position).normalize();
+      const distance = -state.camera.position.z / tempDir.z; // Ray intersect with Z=0 plane
+      tempPos.copy(state.camera.position).add(tempDir.multiplyScalar(distance));
 
       // Transform world mouse pos into local space of the points object
-      pointsRef.current.worldToLocal(pos);
+      pointsRef.current.worldToLocal(tempPos);
 
       // Smoothly track mouse
-      mouse3D.current.lerp(pos, 0.1);
+      mouse3D.current.lerp(tempPos, 0.1);
 
       // Smoothly transition hover state (active if mouse is moved)
       // Check if mouse is near center (0,0) which usually happens when off-canvas initially
