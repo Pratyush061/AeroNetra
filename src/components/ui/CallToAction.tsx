@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 import { IndustrialPanel } from '@/components/ui/IndustrialPanel';
 import { PhysicalButton } from '@/components/ui/PhysicalButton';
 
@@ -23,10 +24,11 @@ export function CallToAction() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0">
+          <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0 w-full sm:w-auto">
             <Link href="/get-started" className="block w-full sm:w-auto">
               <PhysicalButton variant="primary" fullWidth>
-                Get Started
+                DEPLOY
+                <ChevronRight className="w-4 h-4" />
               </PhysicalButton>
             </Link>
             <PhysicalButton variant="secondary" onClick={() => window.location.href = '#features'} fullWidth>
