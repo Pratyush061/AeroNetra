@@ -62,11 +62,11 @@ export function Hero() {
       <div className="max-w-7xl relative z-10 w-full mt-20 pointer-events-none">
         <h1
           ref={textRef}
-          className="font-display text-5xl md:text-7xl lg:text-9xl font-bold tracking-tighter leading-[0.85] uppercase mb-12 flex flex-wrap gap-x-6 gap-y-4"
+          className="font-display text-5xl md:text-7xl lg:text-9xl font-bold tracking-tighter leading-[1.1] uppercase mb-12 flex flex-wrap gap-x-6 gap-y-4 pb-4"
           style={{ perspective: "1000px" }}
         >
           {["VISION,", "ELEVATED."].map((word, i) => (
-            <span key={i} className="inline-flex overflow-hidden text-graphite drop-shadow-2xl">
+            <span key={i} className="inline-flex overflow-visible text-graphite drop-shadow-2xl relative">
               {word.split('').map((char, j) => (
                 <span key={j} className="char inline-block origin-bottom">{char}</span>
               ))}
