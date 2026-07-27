@@ -1,0 +1,17 @@
+
+> temp-app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.11 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+✓ Ready in 530ms
+
+○ Compiling / ...
+ GET / 200 in 8.0s (next.js: 6.8s, application-code: 1158ms)
+ GET / 200 in 115ms (next.js: 9ms, application-code: 106ms)
+[browser] Image with src "/images/drone-vision.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/tech-grid.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/uav.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[browser] Image with src "/images/sim-env.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes

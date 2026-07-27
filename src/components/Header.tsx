@@ -23,16 +23,16 @@ export function Header() {
 
   return (
     <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 lg:px-24 py-6 flex items-center justify-between pointer-events-none">
-      <div className="font-display text-xl font-black uppercase tracking-tighter text-graphite pointer-events-auto bg-chassis/80 backdrop-blur-md px-4 py-2 border-2 border-graphite">
+      <div className="font-display text-xl font-black uppercase tracking-tighter text-graphite pointer-events-auto bg-panel/70 backdrop-blur-md px-4 py-2 border border-white/10 shadow-lg rounded-sm">
         AeroNetra.
       </div>
 
-      <nav className="hidden lg:flex items-center gap-8 pointer-events-auto bg-chassis/80 backdrop-blur-md px-8 py-3 border-2 border-graphite">
+      <nav className="hidden lg:flex items-center gap-8 pointer-events-auto bg-panel/70 backdrop-blur-md px-8 py-3 border border-white/10 shadow-lg rounded-sm">
         {navItems.map((item) => (
           <a
             key={item}
             href={`#${item.toLowerCase().replace(' ', '-')}`}
-            className="font-mono text-xs uppercase font-bold text-graphite hover:text-amber transition-colors"
+            className="font-mono text-xs uppercase font-bold text-metal hover:text-white transition-colors"
           >
             {item}
           </a>
@@ -40,10 +40,10 @@ export function Header() {
       </nav>
 
       <div className="flex items-center gap-4 pointer-events-auto">
-        <button className="hidden md:flex bg-graphite text-chassis px-6 py-3 font-mono text-xs uppercase font-bold hover:bg-amber transition-colors">
+        <button className="hidden md:flex bg-graphite text-chassis px-6 py-3 font-mono text-xs uppercase font-bold hover:bg-white transition-colors rounded-sm shadow-lg">
           Explore Platform
         </button>
-        <button className="lg:hidden bg-graphite text-chassis p-3 hover:bg-amber transition-colors">
+        <button className="lg:hidden bg-graphite text-chassis p-3 hover:bg-white transition-colors rounded-sm">
           <Menu className="w-5 h-5" />
         </button>
       </div>
