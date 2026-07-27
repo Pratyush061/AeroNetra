@@ -10,6 +10,7 @@ import { EffectComposer, Bloom, DepthOfField } from "@react-three/postprocessing
 const vertexShader = `
 uniform float uTime;
 uniform vec2 uMouse;
+uniform float uMouseActive;
 uniform float uScroll;
 
 attribute float size;
@@ -31,14 +32,19 @@ void main() {
   float dist = distance(pos, mousePos);
 
   // Repulsion effect (push particles away if they are close)
-  float repulsionRadius = 3.0;
+  // Reduced interaction radius for subtlety
+  float repulsionRadius = 1.8;
   float force = max(0.0, repulsionRadius - dist);
+
+  // Smooth out the force with a quadratic easing
+  force = force * force * 0.3; // Gentle curve, much lower intensity
 
   // Direction away from mouse
   vec3 dir = normalize(pos - mousePos);
 
-  // Apply force, dampen based on original position to snap back
-  pos += dir * force * 1.5;
+  // Apply force, factoring in uMouseActive so particles smoothly return
+  // to their origin when the mouse leaves or stops moving
+  pos += dir * force * uMouseActive;
 
   // --- Scroll Dispersion ---
   // Expand outward based on scroll depth
@@ -46,9 +52,9 @@ void main() {
   pos *= dispersion;
 
   // Add some turbulence based on time and position
-  pos.x += sin(uTime * 0.5 + pos.y) * 0.2 * uScroll;
-  pos.y += cos(uTime * 0.4 + pos.x) * 0.2 * uScroll;
-  pos.z += sin(uTime * 0.6 + pos.z) * 0.2 * uScroll;
+  pos.x += sin(uTime * 0.3 + pos.y) * 0.1 * uScroll;
+  pos.y += cos(uTime * 0.2 + pos.x) * 0.1 * uScroll;
+  pos.z += sin(uTime * 0.4 + pos.z) * 0.1 * uScroll;
 
   vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
 
@@ -66,10 +72,11 @@ void main() {
   float dist = length(gl_PointCoord - vec2(0.5));
   if (dist > 0.5) discard;
 
-  // Soft edge glow
+  // Soft edge glow, lowering overall alpha for visual balance
   float alpha = smoothstep(0.5, 0.1, dist);
 
-  gl_FragColor = vec4(vColor, alpha * 0.8);
+  // Halved opacity so it doesn't overwhelm the text
+  gl_FragColor = vec4(vColor, alpha * 0.4);
 }
 `;
 
@@ -79,11 +86,16 @@ function PremiumParticleSystem() {
 
   const targetMouse = useRef({ x: 0, y: 0 });
   const currentMouse = useRef({ x: 0, y: 0 });
+  const isHovering = useRef(false);
+  const mouseActiveLerp = useRef(0);
   const scrollY = useRef(0);
 
+  // Added a timeout to fade out interaction when mouse stops moving
+  const idleTimeout = useRef<NodeJS.Timeout | null>(null);
+
   const [positions, sizes, colors] = useMemo(() => {
-    // Massive increase in particle density for volumetric feel
-    const particleCount = 60000;
+    // Reduced particle count from 60k to 30k for a lighter, balanced feel
+    const particleCount = 30000;
     const pos = new Float32Array(particleCount * 3);
     const size = new Float32Array(particleCount);
     const color = new Float32Array(particleCount * 3);
@@ -169,14 +181,25 @@ function PremiumParticleSystem() {
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
     uMouse: { value: new THREE.Vector2(0, 0) },
+    uMouseActive: { value: 0 },
     uScroll: { value: 0 }
   }), []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      isHovering.current = true;
       targetMouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       // Invert Y axis for WebGL
       targetMouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      if (idleTimeout.current) clearTimeout(idleTimeout.current);
+      idleTimeout.current = setTimeout(() => {
+        isHovering.current = false;
+      }, 500); // Mouse idle for 500ms triggers return to origin
+    };
+
+    const handleMouseLeave = () => {
+      isHovering.current = false;
     };
 
     const handleScroll = () => {
@@ -184,31 +207,46 @@ function PremiumParticleSystem() {
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("mouseleave", handleMouseLeave, { passive: true });
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseleave", handleMouseLeave);
       window.removeEventListener("scroll", handleScroll);
+      if (idleTimeout.current) clearTimeout(idleTimeout.current);
     };
   }, []);
 
   useFrame((state, delta) => {
+    // Cap delta time to prevent massive jumps/fast rotations after tab switching
+    const dt = Math.min(delta, 0.1);
+
     if (materialRef.current) {
       // Update time
       materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
 
       // Smoothly interpolate mouse position for fluid physics
-      currentMouse.current.x = THREE.MathUtils.lerp(currentMouse.current.x, targetMouse.current.x, delta * 5);
-      currentMouse.current.y = THREE.MathUtils.lerp(currentMouse.current.y, targetMouse.current.y, delta * 5);
+      // Lower lerp factor (from 5 to 2.5) for gentler easing
+      currentMouse.current.x = THREE.MathUtils.lerp(currentMouse.current.x, targetMouse.current.x, dt * 2.5);
+      currentMouse.current.y = THREE.MathUtils.lerp(currentMouse.current.y, targetMouse.current.y, dt * 2.5);
 
       materialRef.current.uniforms.uMouse.value.set(currentMouse.current.x, currentMouse.current.y);
+
+      // Smoothly fade mouse interaction in and out
+      mouseActiveLerp.current = THREE.MathUtils.lerp(
+        mouseActiveLerp.current,
+        isHovering.current ? 1 : 0,
+        dt * 3
+      );
+      materialRef.current.uniforms.uMouseActive.value = mouseActiveLerp.current;
 
       // Smoothly interpolate scroll factor
       const targetScroll = Math.min(scrollY.current / window.innerHeight, 1.5);
       materialRef.current.uniforms.uScroll.value = THREE.MathUtils.lerp(
         materialRef.current.uniforms.uScroll.value,
         targetScroll,
-        delta * 3
+        dt * 3
       );
     }
 
@@ -216,16 +254,16 @@ function PremiumParticleSystem() {
       // Base rotation independent of shader
       const targetScroll = Math.min(scrollY.current / window.innerHeight, 1.5);
 
-      const targetRotY = state.clock.elapsedTime * 0.05 + (targetMouse.current.x * 0.2) + (targetScroll * Math.PI * 0.25);
-      const targetRotX = (targetMouse.current.y * 0.2) + 0.1 - (targetScroll * 0.5);
+      const targetRotY = state.clock.elapsedTime * 0.05 + (targetMouse.current.x * 0.1 * mouseActiveLerp.current) + (targetScroll * Math.PI * 0.25);
+      const targetRotX = (targetMouse.current.y * 0.1 * mouseActiveLerp.current) + 0.1 - (targetScroll * 0.5);
 
-      meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, targetRotY, delta * 2);
-      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, targetRotX, delta * 2);
+      meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, targetRotY, dt * 1.5);
+      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, targetRotX, dt * 1.5);
     }
   });
 
   return (
-    <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.5}>
+    <Float speed={1.5} rotationIntensity={0.15} floatIntensity={0.3}>
       <points ref={meshRef}>
         <bufferGeometry>
           <bufferAttribute
