@@ -4,7 +4,14 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useRef, useMemo, useEffect, useCallback, useState } from "react";
 import * as THREE from "three";
 
+
 /* ----------------------------- Utilities ---------------------------------- */
+
+// Pre-allocated objects for useFrame
+const _raySphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 6);
+const _sphereHitTarget = new THREE.Vector3();
+const _localVector = new THREE.Vector3();
+
 
 // Deterministic PRNG (Mulberry32) — SSR/CSR safe
 function makeRng(seed: number) {
@@ -166,8 +173,8 @@ function buildParticles(isMobile: boolean): ParticleArrays {
   const radius = 4.0;
   const rng = makeRng(20260728);
 
-  const continentTarget = isMobile ? 1200 : 2200;
-  const gridTarget = isMobile ? 300 : 500;
+  const continentTarget = isMobile ? 900 : 2200;
+  const gridTarget = isMobile ? 200 : 500;
   const total = continentTarget + gridTarget;
 
   const positions = new Float32Array(total * 3);
@@ -478,9 +485,17 @@ function ParticleGlobe() {
               xR += sin(aIndex * 0.37 + uTime * 1.4) * 0.18;
               yR += cos(aIndex * 0.29 + uTime * 1.1) * 0.14;
 
-              // Cubic ease so the transition from globe → ribbons is silky
-              float blendE = eased * eased * (3.0 - 2.0 * eased);
-              pos = mix(pos, vec3(xR, yR, zR), blendE);
+              // Custom smoother ease for transition from globe to ribbons
+              float blendE = eased * eased * eased * (eased * (eased * 6.0 - 15.0) + 10.0); // Smootherstep
+              // Add a bit of spiral motion during the transition
+              float spiralSpin = blendE * 3.14159 * 1.5;
+              float cx = cos(spiralSpin);
+              float sz = sin(spiralSpin);
+              float rotX = pos.x * cx - pos.z * sz;
+              float rotZ = pos.x * sz + pos.z * cx;
+              vec3 spiraledPos = vec3(rotX, pos.y, rotZ);
+
+              pos = mix(spiraledPos, vec3(xR, yR, zR), blendE);
             }
 
             float hoverActive = uHover * (1.0 - smoothstep(0.0, 0.35, uProgress));
@@ -602,11 +617,17 @@ function ParticleGlobe() {
     };
     mq.addEventListener("change", onMq);
 
+    let scrollRaf = 0;
     const onScroll = () => {
-      // Spiral begins almost immediately (2% scroll), fully formed at 50% viewport
-      const scrollRatio = window.scrollY / Math.max(1, window.innerHeight);
-      const p = Math.max(0, Math.min(1, (scrollRatio - 0.02) / 0.48));
-      rawProgress.current = p;
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      scrollRaf = requestAnimationFrame(() => {
+        // Adjust the spread to make detachment more elegant and gradual (0% to 100% of hero section height)
+        // Let's map it across a longer scroll distance for smoother visual transition
+        // The hero is typically 100vh. A slow transition from 5% to 90% is much smoother.
+        const scrollRatio = window.scrollY / Math.max(1, window.innerHeight);
+        const p = Math.max(0, Math.min(1, (scrollRatio - 0.05) / 0.85));
+        rawProgress.current = p;
+      });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
@@ -620,6 +641,7 @@ function ParticleGlobe() {
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("scroll", onScroll);
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
       window.removeEventListener("pointerup", onWindowPointerUp);
       window.removeEventListener("pointercancel", onWindowPointerUp);
       mq.removeEventListener("change", onMq);
@@ -714,8 +736,9 @@ function ParticleGlobe() {
     raycaster.current.setFromCamera(state.pointer, state.camera);
     
     // Raycast to a virtual sphere around the globe (radius 6) for better lower-hemisphere interaction
-    const raySphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 6);
-    const sphereHit = raycaster.current.ray.intersectSphere(raySphere, new THREE.Vector3());
+    _raySphere.center.set(0, 0, 0);
+    _raySphere.radius = 6;
+    const sphereHit = raycaster.current.ray.intersectSphere(_raySphere, _sphereHitTarget);
     
     // Use sphere intersection if valid, otherwise fall back to plane
     if (sphereHit !== null) {
@@ -724,16 +747,16 @@ function ParticleGlobe() {
       raycaster.current.ray.intersectPlane(dragPlane.current, hitPoint.current);
     }
     
-    const local = hitPoint.current.clone();
-    groupRef.current.worldToLocal(local);
+    _localVector.copy(hitPoint.current);
+    groupRef.current.worldToLocal(_localVector);
     
     // Clamp mouse position to prevent shader artifacts from extreme values
     const maxDist = 8;
-    if (local.length() > maxDist) {
-      local.normalize().multiplyScalar(maxDist);
+    if (_localVector.length() > maxDist) {
+      _localVector.normalize().multiplyScalar(maxDist);
     }
     
-    mouseLocal.current.lerp(local, 0.12);
+    mouseLocal.current.lerp(_localVector, 0.12);
 
     const to = hoverTarget.current;
     const rate = to > hoverCurrent.current ? 0.12 : 0.03;
@@ -748,7 +771,7 @@ function ParticleGlobe() {
 
   /* ------------------------------- JSX ------------------------------------ */
 
-  const { positions, aSize, aBrightness, aLatitude, aIndex, aLayer, count } =
+  const { positions, aSize, aBrightness, aLatitude, aIndex, aLayer } =
     particles;
 
   // Manually create buffer attributes to ensure proper initialization
@@ -768,6 +791,7 @@ function ParticleGlobe() {
   return (
     <group
       ref={groupRef}
+      scale={isMobile ? 0.75 : 1}
       onPointerDown={onDragDown}
       onPointerMove={onDragMove}
       onPointerUp={onDragUp}
