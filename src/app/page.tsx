@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/sections/Hero";
 import { Features } from "@/components/sections/Features";
+import { PerceptionDemo } from "@/components/sections/PerceptionDemo";
 import { Showcase } from "@/components/sections/Showcase";
 import { OpenSource } from "@/components/sections/OpenSource";
 import { CTA } from "@/components/sections/CTA";
@@ -12,6 +13,7 @@ export default function Home() {
       <Header />
       <Hero />
       <Features />
+      <PerceptionDemo />
       <Showcase />
       <OpenSource />
       <CTA />
