@@ -54,26 +54,51 @@ function TiltCard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let running = true;
+    // Track last applied values to prevent unnecessary DOM updates
+    const lastApplied = { rx: -999, ry: -999, lx: -999, ly: -999, hover: false };
+
     const tick = () => {
       if (!running) return;
       const c = current.current;
       const t = target.current;
       const ease = 0.08;
 
-      c.rx = lerp(c.rx, t.rx, ease);
-      c.ry = lerp(c.ry, t.ry, ease);
-      c.lx = lerp(c.lx, t.lx, ease);
-      c.ly = lerp(c.ly, t.ly, ease);
+      // If we are close enough to the target and not moving much, skip computation
+      const dRx = Math.abs(t.rx - c.rx);
+      const dRy = Math.abs(t.ry - c.ry);
+      const dLx = Math.abs(t.lx - c.lx);
+      const dLy = Math.abs(t.ly - c.ly);
 
-      if (cardRef.current) {
-        cardRef.current.style.transform =
-          `perspective(800px) rotateX(${c.rx}deg) rotateY(${c.ry}deg)`;
-      }
-      if (lightRef.current) {
-        const opacity = hovering.current ? 1 : 0;
-        lightRef.current.style.opacity = String(opacity);
-        lightRef.current.style.background =
-          `radial-gradient(600px circle at ${c.lx}% ${c.ly}%, rgba(255,255,255,0.06), transparent 40%)`;
+      const isMoving = dRx > 0.01 || dRy > 0.01 || dLx > 0.01 || dLy > 0.01;
+      const hoverChanged = lastApplied.hover !== hovering.current;
+
+      if (isMoving || hoverChanged) {
+        c.rx = isMoving ? lerp(c.rx, t.rx, ease) : t.rx;
+        c.ry = isMoving ? lerp(c.ry, t.ry, ease) : t.ry;
+        c.lx = isMoving ? lerp(c.lx, t.lx, ease) : t.lx;
+        c.ly = isMoving ? lerp(c.ly, t.ly, ease) : t.ly;
+
+        if (cardRef.current && (Math.abs(lastApplied.rx - c.rx) > 0.01 || Math.abs(lastApplied.ry - c.ry) > 0.01)) {
+          cardRef.current.style.transform =
+            `perspective(800px) rotateX(${c.rx.toFixed(2)}deg) rotateY(${c.ry.toFixed(2)}deg)`;
+          lastApplied.rx = c.rx;
+          lastApplied.ry = c.ry;
+        }
+
+        if (lightRef.current) {
+          const opacity = hovering.current ? 1 : 0;
+          if (hoverChanged) {
+            lightRef.current.style.opacity = String(opacity);
+            lastApplied.hover = hovering.current;
+          }
+
+          if (opacity > 0 && (Math.abs(lastApplied.lx - c.lx) > 0.1 || Math.abs(lastApplied.ly - c.ly) > 0.1)) {
+            lightRef.current.style.background =
+              `radial-gradient(600px circle at ${c.lx.toFixed(1)}% ${c.ly.toFixed(1)}%, rgba(255,255,255,0.06), transparent 40%)`;
+            lastApplied.lx = c.lx;
+            lastApplied.ly = c.ly;
+          }
+        }
       }
 
       raf.current = requestAnimationFrame(tick);
