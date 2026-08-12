@@ -1,0 +1,3 @@
+## 2025-05-18 - Unconditional DOM updates in `requestAnimationFrame`
+**Learning:** `requestAnimationFrame` loops in React components (like the `TiltCard` implementation in `src/components/sections/Features.tsx`) that unconditionally mutate DOM elements (e.g., `style.transform`) every frame cause massive layout and style recalculation thrashing, even when the values haven't changed. The browser spends idle time constantly reapplying the same CSS properties.
+**Action:** When implementing custom animation loops with `requestAnimationFrame`, always cache the last applied values (`lastApplied`) and calculate the delta to the target state. Only write to the DOM if the difference exceeds a small threshold (e.g., > 0.01) to allow the browser to rest when the animation settles.
