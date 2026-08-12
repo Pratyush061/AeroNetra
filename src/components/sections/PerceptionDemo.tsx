@@ -41,7 +41,7 @@ export function PerceptionDemo() {
   }, [reducedMotion]);
 
   return (
-    <section className="py-32 px-6 md:px-12 lg:px-24 bg-chassis border-b border-white/10 overflow-hidden relative">
+    <section id="perception-demo" className="py-32 px-6 md:px-12 lg:px-24 bg-chassis border-b border-white/10 overflow-hidden relative">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
           <div>
