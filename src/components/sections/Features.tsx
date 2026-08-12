@@ -37,7 +37,8 @@ const features = [
     title: "Swarm Logic",
     desc: "Decentralized communication protocols for multi-agent autonomous coordination.",
     num: "04",
-    img: "/images/drone-vision.jpg"
+    img: "/images/drone-vision.jpg",
+    status: "Research"
   }
 ];
 
@@ -231,7 +232,14 @@ export function Features() {
                   </div>
 
                   <div className="relative z-20 p-8">
-                    <h3 className="font-display text-2xl font-bold uppercase mb-4 text-white drop-shadow-md group-hover:translate-x-1 transition-transform duration-500">{f.title}</h3>
+                    <h3 className="font-display text-2xl font-bold uppercase mb-4 text-white drop-shadow-md group-hover:translate-x-1 transition-transform duration-500 flex items-center gap-3">
+                      {f.title}
+                      {f.status && (
+                        <span className="font-mono text-[10px] bg-white/10 text-white/70 px-2 py-0.5 rounded-sm uppercase tracking-wider border border-white/20">
+                          {f.status}
+                        </span>
+                      )}
+                    </h3>
                     <p className="font-sans text-sm text-white/70 leading-relaxed max-w-sm drop-shadow-sm group-hover:text-white/90 transition-colors duration-500">{f.desc}</p>
                   </div>
 
