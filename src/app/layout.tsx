@@ -30,6 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} scroll-smooth`}>
       <body className="min-h-screen antialiased bg-chassis text-graphite selection:bg-amber selection:text-white flex flex-col">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:top-4 focus:left-4 focus:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber font-mono text-sm uppercase tracking-wider font-bold">
+          Skip to main content
+        </a>
         {children}
       </body>
     </html>

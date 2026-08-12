@@ -9,15 +9,17 @@ import { Footer } from "@/components/sections/Footer";
 
 export default function Home() {
   return (
-    <main className="flex-1 w-full bg-chassis relative">
+    <>
       <Header />
-      <Hero />
-      <Features />
-      <PerceptionDemo />
-      <Showcase />
-      <OpenSource />
-      <CTA />
+      <main id="main-content" className="flex-1 w-full bg-chassis relative">
+        <Hero />
+        <Features />
+        <PerceptionDemo />
+        <Showcase />
+        <OpenSource />
+        <CTA />
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }
