@@ -4,7 +4,12 @@ import { useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight } from "lucide-react";
-import { DroneCanvas } from "@/components/3d/DroneCanvas";
+import dynamic from "next/dynamic";
+
+const DroneCanvas = dynamic(
+  () => import("@/components/3d/DroneCanvas").then((mod) => mod.DroneCanvas),
+  { ssr: false, loading: () => <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none"><div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div></div> }
+);
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -202,11 +207,11 @@ export function Hero() {
             </p>
 
             <div ref={buttonsRef} className="flex items-center gap-6 pointer-events-auto">
-              <button className="group relative flex items-center justify-center gap-2 bg-graphite text-chassis px-8 py-4 font-mono text-sm uppercase tracking-wider overflow-hidden rounded-sm btn-lift" style={{ opacity: 0 }}>
-                <span className="relative z-10 flex items-center gap-2 font-bold transition-colors duration-300 group-hover:text-chassis">
+              <button className="group relative flex items-center justify-center gap-2 bg-white text-black px-8 py-4 font-mono text-sm uppercase tracking-wider overflow-hidden rounded-sm btn-lift border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-shadow duration-500" style={{ opacity: 0 }}>
+                <span className="relative z-10 flex items-center gap-2 font-bold transition-colors duration-300 group-hover:text-black">
                   Initialize <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-white via-gray-100 to-white transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out" />
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-white to-gray-200 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out" />
               </button>
 
               <div className="font-mono text-xs text-metal uppercase flex flex-col gap-1.5 bg-panel/50 px-4 py-2.5 border border-white/5 rounded-sm" style={{ opacity: 0 }}>
