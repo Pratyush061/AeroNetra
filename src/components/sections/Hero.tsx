@@ -214,13 +214,13 @@ export function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-white to-gray-200 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out" />
               </a>
 
-              <div className="font-mono text-xs text-metal uppercase flex flex-col gap-1.5 bg-panel/50 px-4 py-2.5 border border-white/5 rounded-sm" style={{ opacity: 0 }}>
+              <a href="#perception-demo" className="font-mono text-xs text-metal uppercase flex flex-col gap-1.5 bg-panel/50 px-4 py-2.5 border border-white/5 rounded-sm hover:border-white/20 hover:bg-panel/70 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer" style={{ opacity: 0 }}>
                 <span className="flex items-center gap-2">
                   <span ref={statusDotRef} className="w-1.5 h-1.5 bg-green-500 rounded-full" />
                   <span ref={statusTextRef}>Status: Active</span>
                 </span>
                 <span>Research Build</span>
-              </div>
+              </a>
             </div>
           </div>
         </div>
