@@ -106,6 +106,15 @@ function pointInPolygon(
   return inside;
 }
 
+let cachedContinentMask: { data: Uint8Array; width: number; height: number } | null = null;
+
+function getContinentMask() {
+  if (!cachedContinentMask) {
+    cachedContinentMask = createContinentMask();
+  }
+  return cachedContinentMask;
+}
+
 function createContinentMask() {
   const W = 360;
   const H = 180;
@@ -169,7 +178,7 @@ type ParticleArrays = {
 };
 
 function buildParticles(isMobile: boolean): ParticleArrays {
-  const mask = createContinentMask();
+  const mask = getContinentMask();
   const radius = 4.0;
   const rng = makeRng(20260728);
 
