@@ -168,7 +168,7 @@ export function Hero() {
         style={{ opacity: 0 }}
       >
         <span ref={statusDotRef} className="w-2 h-2 bg-amber rounded-full" />
-        AeroNetra Systems // V 2.4.0
+        AeroNetra Systems // v2.4.0
       </div>
 
       <div ref={textLayerRef} className="max-w-7xl relative z-10 w-full mt-20 pointer-events-none">
