@@ -114,7 +114,7 @@ export function Showcase() {
   }, []);
 
   const listItems = [
-    "+ Synthetic Data Generation",
+    "+ Synthetic data generation",
     "+ Edge-case scenario testing",
     "+ Hardware-in-the-loop (HITL)",
   ];
