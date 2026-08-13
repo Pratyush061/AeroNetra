@@ -13,6 +13,7 @@ export function Showcase() {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const innerImageRef = useRef<HTMLImageElement>(null);
   const hudAltRef = useRef<HTMLDivElement>(null);
   const hudSpdRef = useRef<HTMLDivElement>(null);
   const hudTrgRef = useRef<HTMLDivElement>(null);
@@ -96,8 +97,8 @@ export function Showcase() {
       });
 
       // Image parallax on scroll
-      if (imageRef.current) {
-        gsap.to(imageRef.current.querySelector('img'), {
+      if (innerImageRef.current && imageRef.current) {
+        gsap.to(innerImageRef.current, {
           y: -30,
           ease: "none",
           scrollTrigger: {
@@ -144,6 +145,7 @@ export function Showcase() {
         <div className="order-1 lg:order-2 h-[400px] md:h-[600px] relative w-full" ref={imageRef}>
           <div className="absolute inset-0 bg-panel rounded-sm overflow-hidden border border-white/10 shadow-2xl group">
              <Image
+               ref={innerImageRef}
                src="/images/sim-env.jpg"
                alt="Drone Simulation"
                fill
