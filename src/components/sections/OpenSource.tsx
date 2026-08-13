@@ -92,7 +92,7 @@ export function OpenSource() {
               <p className="font-sans text-sm text-metal mb-4 group-hover:text-white/70 transition-colors duration-300">Core computer vision pipeline for real-time object tracking in aerial footage.</p>
               <div className="flex gap-4 font-mono text-xs text-white/50">
                 <span>C++ / Python</span>
-                <span>1.2k Stars</span>
+                <span>Active Development</span>
               </div>
             </div>
           </div>
