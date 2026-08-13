@@ -219,7 +219,7 @@ export function Hero() {
                   <span ref={statusDotRef} className="w-1.5 h-1.5 bg-green-500 rounded-full" />
                   <span ref={statusTextRef}>Status: Active</span>
                 </span>
-                <span>Latency: 12ms</span>
+                <span>Research Build</span>
               </div>
             </div>
           </div>
