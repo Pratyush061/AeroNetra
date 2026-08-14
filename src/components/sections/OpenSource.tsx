@@ -70,7 +70,7 @@ export function OpenSource() {
             <span className="text-stroke-light">The Open.</span>
           </h2>
           <p className="font-sans text-lg text-white/80 leading-relaxed mb-8">
-            Engineered for aerial problems. We believe the future of autonomous flight should be collaborative, transparent, and accessible to researchers and developers worldwide.
+            Designed to work alongside PX4, ROS 2, and Gazebo. We believe the future of autonomous flight should be collaborative, transparent, and accessible to researchers and developers worldwide.
           </p>
           <div>
             <button className="group relative inline-flex items-center justify-center gap-2 bg-graphite text-chassis px-8 py-4 font-mono text-sm uppercase tracking-wider overflow-hidden rounded-sm border border-white/10 hover:border-white/50 transition-colors btn-lift">
